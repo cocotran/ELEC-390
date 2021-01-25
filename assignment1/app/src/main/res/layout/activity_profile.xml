@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+    <TextView
+        android:id="@+id/nameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="80dp"
+        android:textColor="@color/gray_900"
+        />
+
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="19"
+        android:inputType="textPersonName"
+        android:hint="Your full name"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nameTitle"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/gray_500"
+        android:backgroundTint="@color/gray_500"
+        />
+
+    <TextView
+        android:id="@+id/ageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Age"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nameInput"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/gray_900"
+        />
+
+    <EditText
+        android:id="@+id/ageInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="19"
+        android:inputType="textPersonName"
+        android:hint="Your age"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ageTitle"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/gray_500"
+        android:backgroundTint="@color/gray_500"
+        />
+
+    <TextView
+        android:id="@+id/studentIDTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student ID"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ageInput"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/gray_900"
+        />
+
+    <EditText
+        android:id="@+id/studentIDInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="19"
+        android:inputType="textPersonName"
+        android:hint="Your 8 digits student ID"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/studentIDTitle"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/gray_500"
+        android:backgroundTint="@color/gray_500"
+        />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/studentIDInput"
+        android:layout_marginTop="150dp"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
