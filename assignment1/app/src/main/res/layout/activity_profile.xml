@@ -22,10 +22,10 @@
         android:id="@+id/nameInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="19"
+        android:ems="18"
         android:inputType="textPersonName"
-        android:hint="Your full name"
-        android:textSize="14dp"
+        android:hint="Enter your full name"
+        android:textSize="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/nameTitle"
@@ -33,6 +33,7 @@
         android:layout_marginTop="25dp"
         android:textColor="@color/gray_500"
         android:backgroundTint="@color/gray_500"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         />
 
     <TextView
@@ -51,16 +52,17 @@
         android:id="@+id/ageInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="19"
-        android:inputType="textPersonName"
-        android:hint="Your age"
-        android:textSize="14dp"
+        android:ems="18"
+        android:inputType="number"
+        android:hint="Enter your age"
+        android:textSize="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ageTitle"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="25dp"
         android:textColor="@color/gray_500"
         android:backgroundTint="@color/gray_500"
+        android:maxLength="3"
         />
 
     <TextView
@@ -79,16 +81,17 @@
         android:id="@+id/studentIDInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="19"
-        android:inputType="textPersonName"
-        android:hint="Your 8 digits student ID"
-        android:textSize="14dp"
+        android:ems="18"
+        android:inputType="number"
+        android:hint="Enter your 6 digits student ID"
+        android:textSize="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/studentIDTitle"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="25dp"
         android:textColor="@color/gray_500"
         android:backgroundTint="@color/gray_500"
+        android:maxLength="6"
         />
 
     <Button
@@ -102,6 +105,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/studentIDInput"
         android:layout_marginTop="150dp"
+        />
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please fill in all the required fields."
+        tools:layout_editor_absoluteX="177dp"
+        tools:layout_editor_absoluteY="439dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/studentIDInput"
+        android:layout_marginTop="80dp"
+        android:textColor="@color/red_600"
         />
 
 
