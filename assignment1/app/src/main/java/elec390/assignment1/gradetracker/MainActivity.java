@@ -10,8 +10,10 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    protected SharedPreferenceHelper sharedPreferenceHelper;
-    protected Button profileActivityButton;
+    private SharedPreferenceHelper sharedPreferenceHelper;
+    private Intent startIntent;
+    private Button profileActivityButton;
+    private Button gradeActivityButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
                 goToProfileActivity();
             }
         });
+
+        gradeActivityButton = (Button)findViewById(R.id.gradeActivityButton);
+        gradeActivityButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToGradeActivity();
+            }
+        });
     }
 
     protected void onStart() {
@@ -37,8 +46,13 @@ public class MainActivity extends AppCompatActivity {
             profileActivityButton.setText(profile.getName());
     }
 
-    void goToProfileActivity() {
-        Intent startIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+    private void goToProfileActivity() {
+        startIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(startIntent);
+    }
+
+    private void goToGradeActivity() {
+        startIntent = new Intent(getApplicationContext(), GradeActivity.class);
         startActivity(startIntent);
     }
 }

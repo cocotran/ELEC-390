@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -80,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_bar, menu);
+        inflater.inflate(R.menu.action_bar_profile, menu);
         return true;
     }
 
@@ -108,24 +107,31 @@ public class ProfileActivity extends AppCompatActivity {
 //        https://stackoverflow.com/a/6290970
 //        if all information is provided
         if (name.trim().length() > 0 && age.trim().length() > 0 && ID.trim().length() > 0) {
-//            correct ID provided
-            if (ID.trim().length() == 6) {
-                errorMessage.setVisibility(View.GONE);
-                try {
-                    Profile newProfile = new Profile(name, age, ID);
-                    sharedPreferenceHelper.setProfile(newProfile);
-//                   return to view mode
-                    setViewMode();
-                    Toast.makeText(this, "Profile saved successfully.", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(this, "Failed to save profile. Please try again.", Toast.LENGTH_SHORT).show();
+//            correct age provided
+            if (Integer.parseInt(age) >= 18) {
+//                correct ID provided
+                if (ID.trim().length() == 6) {
+                    errorMessage.setVisibility(View.GONE);
+                    try {
+                        Profile newProfile = new Profile(name, age, ID);
+                        sharedPreferenceHelper.setProfile(newProfile);
+                        //                   return to view mode
+                        setViewMode();
+                        Toast.makeText(this, "Profile saved successfully.", Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e) { Toast.makeText(this, "Failed to save profile. Please try again.", Toast.LENGTH_SHORT).show(); }
                 }
+//                incorrect ID
+                else
+                    errorMessage.setVisibility(View.VISIBLE);
+                    errorMessage.setText("Please enter a valid student ID.");
             }
-            else {
+//            incorrect age
+            else
                 errorMessage.setVisibility(View.VISIBLE);
-                errorMessage.setText("Please enter a valid student ID.");
-            }
+                errorMessage.setText("Please enter a valid age.");
         }
+//        missing info
         else errorMessage.setVisibility(View.VISIBLE);
     }
 
