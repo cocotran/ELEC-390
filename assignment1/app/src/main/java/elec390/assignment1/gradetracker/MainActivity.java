@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sharedPreferenceHelper = new SharedPreferenceHelper(MainActivity.this);
+//        for the purpose of showcasing all features, sharedPreference data is reset every times the app restarts
+        sharedPreferenceHelper.reset();
 
         profileActivityButton = (Button)findViewById(R.id.profileActivityButton);
         profileActivityButton.setOnClickListener(new View.OnClickListener() {
@@ -39,11 +42,18 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart() {
         super.onStart();
+
         Profile profile = sharedPreferenceHelper.getProfile();
-        if (profile == null)
-            goToProfileActivity();
-        else
-            profileActivityButton.setText(profile.getName());
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (profile == null)
+                    goToProfileActivity();
+                else
+                    profileActivityButton.setText(profile.getName());
+            }
+        }, 1000);
     }
 
     private void goToProfileActivity() {

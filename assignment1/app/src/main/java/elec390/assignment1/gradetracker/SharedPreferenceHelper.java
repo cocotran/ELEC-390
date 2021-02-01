@@ -2,12 +2,14 @@ package elec390.assignment1.gradetracker;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 public class SharedPreferenceHelper {
     private SharedPreferences sharedPreferences;
-    private Profile profile;
 
 //  https://stackoverflow.com/a/18463758
 //  https://github.com/google/gson
@@ -34,5 +36,21 @@ public class SharedPreferenceHelper {
             return profile;
         }
         return null;
+    }
+
+    public void setGradeType(String type) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("type", type);
+        editor.commit();
+    }
+
+    public Boolean getIsLetterGrade() {
+        String type = sharedPreferences.getString("type", "");
+        return (type == "Letter");
+    }
+
+    public void reset() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().commit();
     }
 }

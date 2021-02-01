@@ -27,13 +27,18 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class GradeActivity extends AppCompatActivity {
+    private SharedPreferenceHelper sharedPreferenceHelper;
     private ListView courseListView;
     private ArrayAdapter courseAdapter;
-    public static boolean isLetterGrade = false;
     private ArrayList<Course> courseArrayList;
+    public static ArrayList<Integer> assignmentGradeList;
+    public static ArrayList<Integer> assignmentNo;
+    public static ArrayList<Integer> averageNo;
+    public static ArrayList<Double> averageGradeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,13 @@ public class GradeActivity extends AppCompatActivity {
 
         assert getSupportActionBar() != null;   //null check
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
+
+        sharedPreferenceHelper = new SharedPreferenceHelper(GradeActivity.this);
+
+        assignmentGradeList = new ArrayList<Integer>();
+        assignmentNo = new ArrayList<Integer>();
+        averageNo = new ArrayList<Integer>();
+        averageGradeList = new ArrayList<Double>();
     }
 
     @Override
@@ -59,6 +71,9 @@ public class GradeActivity extends AppCompatActivity {
             Course newCourse = Course.generateRandomCourse();
             courseArrayList.add(newCourse);
         }
+
+        assignmentNo.clear();
+        assignmentGradeList.clear();
 
         courseListView = (ListView)findViewById(R.id.courseListView);
         courseAdapter = new CourseAdapter(this, courseArrayList);
@@ -87,7 +102,11 @@ public class GradeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_convertGrade:
                 // User chose the "Convert" option
-                GradeActivity.isLetterGrade = !GradeActivity.isLetterGrade;
+                convertGrade();
+                if (sharedPreferenceHelper.getIsLetterGrade())
+                    sharedPreferenceHelper.setGradeType("Percentage");
+                else
+                    sharedPreferenceHelper.setGradeType("Letter");
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -106,6 +125,16 @@ public class GradeActivity extends AppCompatActivity {
         return null;
     }
 
+    public static String convertToLetterGrade(double grade) {
+        if (grade < 50) return "F";
+        else if (grade >= 50 && grade < 60) return "D";
+        else if (grade >= 60 && grade < 70) return "C";
+        else if (grade >= 70 && grade < 80) return "B";
+        else if (grade > 80 && grade < 90) return "A";
+        else if (grade >= 90) return "A+";
+        return "";
+    }
+
     public static String getAverage(ArrayList<Assignment> assignmentArrayList) {
         double sum = 0;
         for (int i=0; i < assignmentArrayList.size(); i++) {
@@ -113,10 +142,59 @@ public class GradeActivity extends AppCompatActivity {
         }
         return String.format("%.2f", (sum/assignmentArrayList.size()));
     }
+
+    private void convertGrade() {
+        if (!sharedPreferenceHelper.getIsLetterGrade()) {
+//            percentage to letter
+            for (int i=0; i < assignmentNo.size(); i++) {
+                try {
+                    TextView assignment = (TextView)findViewById(assignmentNo.get(i));
+                    String initialAssignment = assignment.getText().toString();
+                    int percentageGrade = assignmentGradeList.get(i);
+                    String newAssignmentString = initialAssignment.substring(0, initialAssignment.indexOf(":")+1) + "  " + GradeActivity.convertToLetterGrade(percentageGrade);
+                    assignment.setText(newAssignmentString);
+                } catch (Exception e) {
+                    break;
+                }
+            }
+            for (int i=0; i < averageNo.size(); i++) {
+                try {
+                    TextView assignment = (TextView)findViewById(averageNo.get(i));
+                    assignment.setText("Average:  " + GradeActivity.convertToLetterGrade(averageGradeList.get(i)));
+                } catch (Exception e) {
+                    break;
+                }
+            }
+        }
+        else {
+            for (int i=0; i < assignmentNo.size(); i++) {
+//                letter to percentage
+                try {
+                    TextView assignment = (TextView)findViewById(assignmentNo.get(i));
+                    String initialAssignment = assignment.getText().toString();
+                    int letterGrade = assignmentGradeList.get(i);
+                    String newAssignmentString = initialAssignment.substring(0, initialAssignment.indexOf(":")+1) + "  " + letterGrade;
+                    assignment.setText(newAssignmentString);
+                } catch (Exception e) {
+                    break;
+                }
+            }
+            for (int i=0; i < averageNo.size(); i++) {
+                try {
+                    TextView assignment = (TextView)findViewById(averageNo.get(i));
+                    assignment.setText("Average:  " + averageGradeList.get(i));
+                } catch (Exception e) {
+                    break;
+                }
+            }
+        }
+    }
 }
 
 //https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
 class CourseAdapter extends ArrayAdapter<Course> {
+    private SharedPreferenceHelper sharedPreferenceHelper;
+
     public CourseAdapter(Context context, ArrayList<Course> courses) {
         super(context, 0, courses);
     }
@@ -127,6 +205,8 @@ class CourseAdapter extends ArrayAdapter<Course> {
 //        Get the data item for this position
         Course course = getItem(position);
         ArrayList<Assignment> assignmentArrayList = course.getAssignments();
+
+        sharedPreferenceHelper = new SharedPreferenceHelper(getContext());
 
 //        Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -144,7 +224,11 @@ class CourseAdapter extends ArrayAdapter<Course> {
         for (int i = 0; i < assignmentArrayList.size(); i++) {
             TextView assignmentTextView = new TextView(getContext());
             Assignment assignment = assignmentArrayList.get(i);
-            if (!GradeActivity.isLetterGrade)
+            int ID = View.generateViewId();
+            assignmentTextView.setId(ID);
+            GradeActivity.assignmentNo.add(ID);
+            GradeActivity.assignmentGradeList.add(assignment.getAssignmentGrade());
+            if (!sharedPreferenceHelper.getIsLetterGrade())
                 assignmentTextView.setText(assignment.getAssignmentTitle() + ":  " + assignment.getAssignmentGrade());
             else
                 assignmentTextView.setText(assignment.getAssignmentTitle() + ":  " + GradeActivity.convertToLetterGrade(assignment.getAssignmentGrade()));
@@ -154,7 +238,15 @@ class CourseAdapter extends ArrayAdapter<Course> {
 
 //        Set average
         TextView averageTextView = (TextView) convertView.findViewById(R.id.averageTextView);
-        averageTextView.setText("Average:  " + GradeActivity.getAverage(assignmentArrayList));
+        int ID = View.generateViewId();
+        averageTextView.setId(ID);
+        GradeActivity.averageNo.add(ID);
+        double average = Double.parseDouble(GradeActivity.getAverage(assignmentArrayList));
+        GradeActivity.averageGradeList.add(average);
+        if (!sharedPreferenceHelper.getIsLetterGrade())
+            averageTextView.setText("Average:  " + average);
+        else
+            averageTextView.setText("Average:  " + GradeActivity.convertToLetterGrade(average));
 
         return convertView;
     }
