@@ -59,8 +59,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSE);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGNMENT);
+        db.execSQL("DROP TABLE IF EXISTS TABLE_COURSE");
+        db.execSQL("DROP TABLE IF EXISTS TABLE_ASSIGNMENT");
 
         // create new tables
         onCreate(db);
@@ -112,6 +112,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String clearDBQuery = "DELETE FROM " + TABLE_NAME;
         db.execSQL(clearDBQuery);
-
     }
 }

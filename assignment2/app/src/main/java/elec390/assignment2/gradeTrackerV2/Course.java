@@ -4,6 +4,7 @@ public class Course {
     private String ID;
     private String title;
     private String courseCode;
+    public static int courseID = 1;
 
     public Course() {}
 
@@ -13,11 +14,14 @@ public class Course {
         this.courseCode = courseCode;
     }
 
-    protected void setID(String ID) {this.ID = ID;}
-    protected void setTitle(String title) {this.title = title;}
-    protected void setCourseCode(String courseCode) {this.courseCode = courseCode;}
+    protected void setID(String ID) { this.ID = ID;}
+    protected void setTitle(String title) { this.title = title; }
+    protected void setCourseCode(String courseCode) { this.courseCode = courseCode; }
 
-    protected String getID() {return ID;}
-    protected String getTitle() {return title;}
-    protected String getCourseCode() {return courseCode;}
+    public static String generateNewID() { return Integer.toString(++courseID); }
+    public static void resetID() { courseID = 1; }
+
+    protected String getID() { return ID; }
+    protected String getTitle() { return title; }
+    protected String getCourseCode() { return courseCode; }
 }

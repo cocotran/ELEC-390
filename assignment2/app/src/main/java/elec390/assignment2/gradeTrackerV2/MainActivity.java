@@ -36,9 +36,12 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: implement onClick action
+                openCourseDialog();
             }
         });
+
+        // for purpose of showing all features, all data is reset whenever the app starts
+        reset();
     }
 
     @Override
@@ -50,6 +53,17 @@ public class MainActivity extends AppCompatActivity {
         courseListView = (ListView)findViewById(R.id.courseListView);
         courseAdapter = new CourseAdapter(this, courseArrayList);
         courseListView.setAdapter(courseAdapter);
+    }
+
+    public void openCourseDialog() {
+        CourseDialogFragment courseDialogFragment = new CourseDialogFragment();
+        courseDialogFragment.show(getSupportFragmentManager(), "example");
+    }
+
+    private void reset() {
+        db.clearDatabase("course");
+        db.clearDatabase("assignments");
+        Course.resetID();
     }
 }
 
