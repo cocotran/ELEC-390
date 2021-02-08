@@ -22,8 +22,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_COURSE = "course";
     private static final String TABLE_ASSIGNMENT = "assignments";
 
-    private static final String KEY_ID = "id";
-
     // COURSE Table - column name
     private static final String KEY_COURSE = "course_id";
     private static final String KEY_COURSE_TITLE = "title";
@@ -37,12 +35,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Table Create Statements
     // Course table create statement
     private static final String CREATE_COURSE_TODO = "CREATE TABLE "
-            + TABLE_COURSE + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_COURSE + " TEXT," + KEY_COURSE_TITLE
+            + TABLE_COURSE + "(" + KEY_COURSE + " TEXT PRIMARY KEY," + KEY_COURSE_TITLE
             + " TEXT," + KEY_COURSE_CODE + " TEXT" + ")";
 
     // Assignment table create statement
     private static final String CREATE_ASSIGNMENT_TODO = "CREATE TABLE "
-            + TABLE_ASSIGNMENT + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_ASSIGNMENT + " TEXT," + KEY_COURSE + " INTEGER," + KEY_ASSIGNMENT_TITLE
+            + TABLE_ASSIGNMENT + "(" + KEY_ASSIGNMENT + " TEXT PRIMARY KEY," + KEY_COURSE + " INTEGER," + KEY_ASSIGNMENT_TITLE
             + " TEXT," + KEY_ASSIGNMENT_GRADE + " DOUBLE" + ")";
 
     public DatabaseHelper(Context context) {
@@ -85,7 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_COURSE_TITLE, course.getTitle());
         values.put(KEY_COURSE_CODE, course.getCourseCode());
 
-        db.update(TABLE_COURSE, values, KEY_ID + " = ?", new String[] {course.getID()});
+        db.update(TABLE_COURSE, values, KEY_COURSE + " = ?", new String[] {course.getID()});
     }
 
 //    getting all courses
@@ -106,6 +104,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         return courses;
+    }
+
+    public void deleteCourse(String course_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_COURSE, KEY_COURSE + " = ?", new String[] { course_id });
     }
 
     public void clearDatabase(String TABLE_NAME) {

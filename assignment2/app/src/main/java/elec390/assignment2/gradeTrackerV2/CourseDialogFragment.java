@@ -34,7 +34,6 @@ public class CourseDialogFragment extends AppCompatDialogFragment {
         }).setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO: save to database
                 courseNameInput = view.findViewById(R.id.courseNameInput);
                 courseCodeInput = view.findViewById(R.id.courseCodeInput);
                 Course course = new Course(Course.generateNewID(), courseNameInput.getText().toString(), courseCodeInput.getText().toString());

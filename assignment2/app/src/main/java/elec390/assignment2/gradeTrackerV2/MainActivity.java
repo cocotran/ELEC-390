@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private DatabaseHelper db;
+    private Controller controller;
     private ArrayList<Course> courseArrayList;
     private ArrayAdapter courseAdapter;
     private ListView courseListView;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         db = new DatabaseHelper(getApplicationContext());
         courseArrayList = new ArrayList<Course>();
+        controller = new Controller();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // for purpose of showing all features, all data is reset whenever the app starts
-        reset();
+//        reset();
     }
 
     @Override
@@ -53,11 +57,21 @@ public class MainActivity extends AppCompatActivity {
         courseListView = (ListView)findViewById(R.id.courseListView);
         courseAdapter = new CourseAdapter(this, courseArrayList);
         courseListView.setAdapter(courseAdapter);
+
+        courseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Course course = (Course) courseListView.getItemAtPosition(position);
+                controller.setSelectedCourse(course);
+                Intent intent = new Intent(MainActivity.this, AssignmentActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void openCourseDialog() {
         CourseDialogFragment courseDialogFragment = new CourseDialogFragment();
-        courseDialogFragment.show(getSupportFragmentManager(), "example");
+        courseDialogFragment.show(getSupportFragmentManager(), "add course");
     }
 
     private void reset() {
