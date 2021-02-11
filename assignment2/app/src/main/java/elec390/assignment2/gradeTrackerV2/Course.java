@@ -4,7 +4,7 @@ public class Course {
     private String ID;
     private String title;
     private String courseCode;
-    public static int courseID = 1;
+    public static int courseID = 0;
 
     public Course() {}
 
@@ -19,7 +19,7 @@ public class Course {
     protected void setCourseCode(String courseCode) { this.courseCode = courseCode; }
 
     public static String generateNewID() { return Integer.toString(++courseID); }
-    public static void resetID() { courseID = 1; }
+    public static void resetID() { courseID = 0; }
 
     protected String getID() { return ID; }
     protected String getTitle() { return title; }

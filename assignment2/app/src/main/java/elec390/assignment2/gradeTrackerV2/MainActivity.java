@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Course> courseArrayList;
     private ArrayAdapter courseAdapter;
     private ListView courseListView;
+    private TextView assignmentAverage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         courseArrayList = new ArrayList<Course>();
         controller = new Controller();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.addCourse);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        reset();
+
+//        reset();      // Reset all database for testing purposes
     }
 
     @Override
@@ -67,6 +70,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        assignmentAverage = (TextView) findViewById(R.id.assignmentAverage);
+        ArrayList<Double> gradeList =  db.getAllAssignmentGrades();
+        String average = getAverageOfAllAssignments(gradeList);
+        assignmentAverage.setText("Average of All Assignments:  " + average);
     }
 
     public void openCourseDialog() {
@@ -74,20 +82,31 @@ public class MainActivity extends AppCompatActivity {
         courseDialogFragment.show(getSupportFragmentManager(), "add course");
     }
 
+    public static String getAverageOfAllAssignments(ArrayList<Double> gradeList) {
+        double sum = 0;
+        for (int i=0; i < gradeList.size(); i++) {
+            sum += gradeList.get(i);
+        }
+        return String.format("%.2f", sum / gradeList.size());
+    }
+
     private void reset() {
         db.clearDatabase("course");
         db.clearDatabase("assignments");
         Course.resetID();
+        Assignment.resetID();
     }
 }
 
 
 class CourseAdapter extends ArrayAdapter<Course> {
+    private DatabaseHelper db;
 
     public CourseAdapter(Context context, ArrayList<Course> courses) {
         super(context, 0, courses);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 //        Get the data item for this position
@@ -104,7 +123,9 @@ class CourseAdapter extends ArrayAdapter<Course> {
 
 //        Set  assignment average
         TextView averageTextView = (TextView) convertView.findViewById(R.id.averageTextView);
-        averageTextView.setText("Assignment Average:  " + "NA");
+        db = new DatabaseHelper(getContext());
+        ArrayList<Double> gradeList =  db.getAllAssignmentGradesByCourse(course.getID());
+        averageTextView.setText("Assignment Average:  " + MainActivity.getAverageOfAllAssignments(gradeList));
 
         return convertView;
     }

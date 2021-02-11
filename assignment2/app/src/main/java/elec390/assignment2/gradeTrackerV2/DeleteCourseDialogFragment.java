@@ -40,8 +40,9 @@ public class DeleteCourseDialogFragment extends AppCompatDialogFragment {
         }).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                db.deleteCourse(courseToDelete.getID());    // remove course from database
-                getActivity().finish();                     // return to MainActivity
+                db.deleteCourse(courseToDelete.getID());                // remove course from database
+                db.deleteAssignmentsByCourse(courseToDelete.getID());   // remove assignments of that course from database
+                getActivity().finish();                                 // return to MainActivity
             }
         });
 

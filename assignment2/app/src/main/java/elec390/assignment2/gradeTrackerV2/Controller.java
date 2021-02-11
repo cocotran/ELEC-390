@@ -5,7 +5,9 @@ public class Controller {
 
     public Controller() {}
 
-    public void setSelectedCourse(Course course) { this.selectedCourse = course; }
+    public static void setSelectedCourse(Course course) { selectedCourse = course; }
 
-    public Course getSelectedCourse() { return this.selectedCourse; }
+    public static Course getSelectedCourse() { return selectedCourse; }
+
+    public static String getSelectedCourseID() { return selectedCourse.getID();}
 }

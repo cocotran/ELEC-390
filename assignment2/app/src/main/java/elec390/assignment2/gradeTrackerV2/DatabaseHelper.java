@@ -76,15 +76,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_COURSE, null, values);
     }
 
-    public void updateCourse(Course course) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_COURSE, course.getID());
-        values.put(KEY_COURSE_TITLE, course.getTitle());
-        values.put(KEY_COURSE_CODE, course.getCourseCode());
-
-        db.update(TABLE_COURSE, values, KEY_COURSE + " = ?", new String[] {course.getID()});
-    }
 
 //    getting all courses
     public ArrayList<Course> getAllCourses() {
@@ -109,6 +100,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteCourse(String course_id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_COURSE, KEY_COURSE + " = ?", new String[] { course_id });
+    }
+
+//    Creating an assignment
+    public void createAssignment(Assignment assignment, String course_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ASSIGNMENT, assignment.getID());
+        values.put(KEY_COURSE, course_id);
+        values.put(KEY_ASSIGNMENT_TITLE, assignment.getTitle());
+        values.put(KEY_ASSIGNMENT_GRADE, assignment.getGrade());
+
+        db.insert(TABLE_ASSIGNMENT, null, values);
+    }
+
+//    getting all assignments
+    public ArrayList<Assignment> getAllAssignmentsByCourse(String course_id) {
+        ArrayList<Assignment> assignments = new ArrayList<Assignment>();
+        String selectQuery = "SELECT    * FROM " + TABLE_ASSIGNMENT + " WHERE " + KEY_COURSE + " = " + course_id;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Assignment assignment = new Assignment();
+                assignment.setID(c.getString((c.getColumnIndex(KEY_ASSIGNMENT))));
+                assignment.setTitle((c.getString(c.getColumnIndex(KEY_ASSIGNMENT_TITLE))));
+                assignment.setGrade((c.getDouble(c.getColumnIndex(KEY_ASSIGNMENT_GRADE))));
+
+                assignments.add(assignment);
+            } while (c.moveToNext());
+        }
+        return assignments;
+    }
+
+    public void deleteAssignmentsByCourse(String course_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_ASSIGNMENT, KEY_COURSE + " = ?", new String[] { course_id });
+    }
+
+    public ArrayList<Double> getAllAssignmentGrades() {
+        ArrayList<Double> grades = new ArrayList<Double>();
+        String selectQuery = "SELECT    " + KEY_ASSIGNMENT_GRADE + "  FROM " + TABLE_ASSIGNMENT;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c.moveToFirst()) {
+            do {
+                double grade = 0;
+                grade = c.getDouble(c.getColumnIndex(KEY_ASSIGNMENT_GRADE));
+                grades.add(grade);
+            } while (c.moveToNext());
+        }
+        return grades;
+    }
+
+    public ArrayList<Double> getAllAssignmentGradesByCourse(String course_id) {
+        ArrayList<Double> grades = new ArrayList<Double>();
+        String selectQuery = "SELECT    " + KEY_ASSIGNMENT_GRADE + "  FROM " + TABLE_ASSIGNMENT + " WHERE   " + KEY_COURSE + " = " + course_id;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c.moveToFirst()) {
+            do {
+                double grade = 0;
+                grade = c.getDouble(c.getColumnIndex(KEY_ASSIGNMENT_GRADE));
+                grades.add(grade);
+            } while (c.moveToNext());
+        }
+        return grades;
     }
 
     public void clearDatabase(String TABLE_NAME) {
